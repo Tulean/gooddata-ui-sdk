@@ -1,4 +1,4 @@
-// (C) 2019-2020 GoodData Corporation
+// (C) 2019-2021 GoodData Corporation
 import a, { AxiosInstance, AxiosRequestConfig } from "axios";
 
 /**
@@ -21,6 +21,9 @@ const _CONFIG: AxiosRequestConfig = {
         },
         put: {
             "Content-Type": "application/json;charset=utf8",
+        },
+        get: {
+            Accept: "application/vnd.gooddata.api+json",
         },
     },
 };
