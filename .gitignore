@@ -82,5 +82,9 @@ skel/**/ci/
 # As a precaution to accidentally leaking secrets, the .npmrc located in repo root is ignored. Do not remove.
 /.npmrc
 
-apidocs
-
+/apidocs/website/build/
+/apidocs/website/node_modules
+/apidocs/docs
+/apidocs/versioned_docs
+/apidocs/versioned_sidebars
+/apidocs
