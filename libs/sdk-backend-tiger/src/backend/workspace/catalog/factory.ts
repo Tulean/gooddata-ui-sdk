@@ -9,6 +9,9 @@ import {
     ICatalogGroup,
     ICatalogMeasure,
     IGroupableCatalogItemBase,
+    isCatalogAttribute,
+    isCatalogFact,
+    isCatalogMeasure,
 } from "@gooddata/sdk-backend-spi";
 import { IdentifierRef, isUriRef, ObjRef } from "@gooddata/sdk-model";
 import { TigerAuthenticatedCallGuard } from "../../../types";
@@ -83,10 +86,31 @@ export class TigerWorkspaceCatalogFactory implements IWorkspaceCatalogFactory {
         const loadersResults = await Promise.all(promises);
 
         const catalogItems: CatalogItem[] = flatten<CatalogItem>(loadersResults);
+        catalogItems.sort((_item1, _item2) => {
+            const item1 = this.getCatalogItemId(_item1)?.toUpperCase();
+            const item2 = this.getCatalogItemId(_item2)?.toUpperCase();
+            if (item1 && item2) {
+                return item1 < item2 ? -1 : item1 > item2 ? 1 : 0;
+            }
+            return 0;
+        });
 
         const groups = this.extractGroups(catalogItems);
 
         return new TigerWorkspaceCatalog(this.authCall, this.workspace, groups, catalogItems, this.options);
+    };
+
+    private getCatalogItemId = (item: CatalogItem) => {
+        if (isCatalogAttribute(item)) {
+            return item.attribute.id;
+        }
+        if (isCatalogFact(item)) {
+            return item.fact.id;
+        }
+        if (isCatalogMeasure(item)) {
+            return item.measure.title;
+        }
+        return;
     };
 
     private tagsToIdentifiers = (tags: ObjRef[]): string[] => {
